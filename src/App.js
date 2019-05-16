@@ -1,57 +1,58 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      greeting: ''
+      location: '',
+      weather: '',
+      currently: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.currentWeather = this.currentWeather.bind(this);
   }
 
   handleChange(event) {
-    this.setState({ name: event.target.value });
+    this.setState({ location: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch(`/api/greeting?name=${encodeURIComponent(this.state.name)}`)
+    fetch(`http://localhost:3001/api/weather?location=${encodeURIComponent(this.state.location)}`)
       .then(response => response.json())
-      .then(state => this.setState(state));
+      .then(data => this.setState({currently:data}))
   }
 
+    currentWeather = ()=>{
+    return (<section>
+               {
+                 this.state.currently.map((item, index) => <div key={index}>{item}</div>)}
+               
+        </section>);
+      }
+  
   render() {
+    if(this.state.requestFailed)return <h2>NOPE</h2>
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="name">Enter your name: </label>
+            <label htmlFor="location">Location:</label>
             <input
-              id="name"
+              id="location"
               type="text"
-              value={this.state.name}
+              value={this.state.location}
               onChange={this.handleChange}
             />
             <button type="submit">Submit</button>
           </form>
-          <p>{this.state.greeting}</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <p>{this.state.weather}</p>
         </header>
+        <div>
+          {this.state.currentWeather}
+        </div>
       </div>
     );
   }
