@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
-import './App.css';
-
+import React, { Component } from "react";
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: '',
-      weather: '',
-      data: [],
-      test: [{first: 1,second:2,third:3,fourth:4,fifth:5},
-      {first: "one", second: "two", third: "three"}]
+      location: "",
+      weather: "",
+      data: undefined,
+      test: [
+        { first: 1, second: 2, third: 3, fourth: 4, fifth: 5 },
+        { first: "one", second: "two", third: "three" }
+      ]
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  } 
+  }
 
   handleChange(event) {
     this.setState({ location: event.target.value });
@@ -22,15 +23,17 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch(`http://localhost:3001/api/weather?location=${encodeURIComponent(this.state.location)}`)
+    fetch(
+      `http://localhost:3001/api/weather?location=${encodeURIComponent(
+        this.state.location
+      )}`
+    )
       .then(response => response.json())
-      .then(data=> {
-        console.log(data)
-        this.setState({data: data})})
-      
+      .then(data => {
+        this.setState({ data: data });
+      });
+  }
 
-      }
-  
   render() {
     return (
       <div className="App">
@@ -45,10 +48,13 @@ class App extends Component {
             />
             <button type="submit">Submit</button>
           </form>
+          {this.state.data && (
+            <div style={{ color: "#fff", fontSize: "2em" }}>
+              <div>apparentTemperature:</div>
+              <div>{this.state.data.currently.apparentTemperature}</div>
+            </div>
+          )}
         </header>
-        <div className="App-Body">
-        <div>{(typeof this.state.data)}</div>
-      </div>
       </div>
     );
   }
