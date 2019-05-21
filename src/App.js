@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
 
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       location: '',
       weather: '',
-      currently: []
+      data: [],
+      test: [{first: 1,second:2,third:3,fourth:4,fifth:5},
+      {first: "one", second: "two", third: "three"}]
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.currentWeather = this.currentWeather.bind(this);
-  }
+  } 
 
   handleChange(event) {
     this.setState({ location: event.target.value });
@@ -22,19 +24,14 @@ class App extends Component {
     event.preventDefault();
     fetch(`http://localhost:3001/api/weather?location=${encodeURIComponent(this.state.location)}`)
       .then(response => response.json())
-      .then(data => this.setState({currently:data}))
-  }
+      .then(data=> {
+        console.log(data)
+        this.setState({data: data})})
+      
 
-    currentWeather = ()=>{
-    return (<section>
-               {
-                 this.state.currently.map((item, index) => <div key={index}>{item}</div>)}
-               
-        </section>);
       }
   
   render() {
-    if(this.state.requestFailed)return <h2>NOPE</h2>
     return (
       <div className="App">
         <header className="App-header">
@@ -48,11 +45,10 @@ class App extends Component {
             />
             <button type="submit">Submit</button>
           </form>
-          <p>{this.state.weather}</p>
         </header>
-        <div>
-          {this.state.currentWeather}
-        </div>
+        <div className="App-Body">
+        <div>{(typeof this.state.data)}</div>
+      </div>
       </div>
     );
   }

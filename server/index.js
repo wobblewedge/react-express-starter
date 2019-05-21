@@ -28,10 +28,6 @@ app.use(pino);
    res.send(d);
   })
 
-  
-    
-  
-
   async function responseHandler(error, response, body) {
     if (response.statusCode === 200 || response.statusCode === 304) {
       var data= await JSON.parse(body)
